@@ -13,8 +13,9 @@ atomList = list . map atom
 
 symbol = parse W.symbol "symbol"
 
+commaSeparatedArgs p = parse (W.commaSeparatedArgs p) "commaSeparatedArgs"
 commaSeparatedList p = parse (W.commaSeparatedList p) "commaSeparatedList"
-spaceSeparatedArgs p = parse (W.spaceSeparatedArgs p) "spaceSeparatedList"
+spaceSeparatedArgs p = parse (W.spaceSeparatedArgs p) "spaceSeparatedArgs"
 spaceSeparatedList p = parse (W.spaceSeparatedList p) "spaceSeparatedList"
 
 main :: IO ()
@@ -44,6 +45,18 @@ main = hspec $ do
       spaceSeparatedList W.symbol "a  b" `shouldBe` (Right $ atomList ["a", "b"])
     it "ignores trailing whitespace" $ do
       spaceSeparatedList W.symbol "a b " `shouldBe` (Right $ atomList ["a", "b"])
+  describe "commaSeparatedArgs" $ do
+    it "correctly handles an empty arg list" $ do
+      commaSeparatedArgs W.symbol "()" `shouldBe` (Right $ args $ list [])
+      commaSeparatedArgs W.symbol "( )" `shouldBe` (Right $ args $ list [])
+    it "correctly parses a comma-separated arg list" $ do
+      commaSeparatedArgs W.symbol "(a)" `shouldBe` (Right $ args $ atomList ["a"])
+      commaSeparatedArgs W.symbol "(a, b)" `shouldBe` (Right $ args $ atomList ["a", "b"])
+      commaSeparatedArgs W.symbol "(a , b)" `shouldBe` (Right $ args $ atomList ["a", "b"])
+    it "ignores whitespace near parentheses" $ do
+      commaSeparatedArgs W.symbol "( a )" `shouldBe` (Right $ args $ atomList ["a"])
+    it "ignores whitespace after ')'" $ do
+      commaSeparatedArgs W.symbol "(a) " `shouldBe` (Right $ args $ atomList ["a"])
   describe "spaceSeparatedArgs" $ do
     it "correctly handles an empty arg list" $ do
       spaceSeparatedArgs W.symbol "()" `shouldBe` (Right $ args $ list [])
