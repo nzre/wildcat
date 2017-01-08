@@ -2,7 +2,7 @@ name:                wildcat
 version:             0.1.0.0
 synopsis:            Wildcat, a concatenative programming language.
 description:         Please see README.md
-homepage:            https://github.com/henry-nazare/wildcat-hs
+homepage:            https://github.com/nzre/wildcat-hs
 license:             MIT
 license-file:        LICENSE
 author:              Henrique Nazaré
@@ -29,4 +29,4 @@ test-suite wildcat-test
 
 source-repository head
   type:     git
-  location: https://github.com/henry-nazare/wildcat-hs
+  location: https://github.com/nzre/wildcat-hs
